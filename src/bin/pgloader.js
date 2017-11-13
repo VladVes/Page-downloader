@@ -1,8 +1,8 @@
-#! env node
+#! /usr/bin/env node
 
 import program from 'commander';
 import * as app from '../../package.json';
-import pageLoad from '../';
+import loadPage from '../';
 
 program
   .version(app.version)
@@ -11,7 +11,7 @@ program
   .arguments('<url>')
   .action((url) => {
     try {
-        pageLoad(url, program.output);
+        loadPage(url, program.output);
     } catch (e) {
       console.log('Error: ', e);
     }
