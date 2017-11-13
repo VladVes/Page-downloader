@@ -31,7 +31,8 @@
     "axios": "^0.17.0",
     "commander": "^2.11.0",
     "listr": "^0.13.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "mz": "^2.7.0"
   },
   "devDependencies": {
     "babel-cli": "*",

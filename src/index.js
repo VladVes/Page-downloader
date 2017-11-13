@@ -1,19 +1,33 @@
+import url from 'url';
+import nodePath from 'path';
 import axios from 'axios';
+import fs from 'mz';
 
-export default (url, outputPath) => {
+const makeFileName = (uri, dir) => {
+  const { host, path } = url.parse(uri);
+  const fileName = `${host}${path}`.replace(/[^\w]/g, '-');
+  return `${dir}${nodePath.sep}${fileName}.html`;
+};
 
+export default (uri, outputPath) => {
   const directory = outputPath ? outputPath : __dirname;
-  console.log("URL given: ", url);
-  console.log("Directory to save page: ", directory);
+  const fullFileName = makeFileName(uri, directory);
 
+  console.log('URL given: ', uri);
+  console.log('PATH GIVEN: ', outputPath);
+  console.log("Page will be saved to: ", fullFileName);
 
-  axios.get(url)
+  axios.get(uri)
     .then((response) => {
-      console.log('PAGE RECEIVED: ', response.data);
+      fs.appendFile(fullFileName, response.data).then((writeErr) => {
+        if (writeErr) {
+          throw new Error(writeErr);
+        }
+        console.log("Page downloaded successfully");
+      })
     })
-    .catch((error) => {
-      console.log('Error: ', error);
+    .catch((httpErr) => {
+      throw new Error(httpErr);
     })
-
 
 };
