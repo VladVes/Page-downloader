@@ -45,6 +45,7 @@
     "eslint-plugin-flowtype": "*",
     "eslint-plugin-import": "*",
     "eslint-plugin-jest": "*",
-    "jest": "*"
+    "jest": "*",
+    "nock": "^9.1.0"
   }
 }

@@ -5,7 +5,7 @@ import fs from 'mz/fs';
 
 const makeFileName = (uri, dir) => {
   const { host, path } = url.parse(uri);
-  const fileName = `${host}${path}`.replace(/[^\w]/g, '-');
+  const fileName = `${host}${path}`.slice(0, -1).replace(/[^\w]/g, '-');
   return `${dir}${nodePath.sep}${fileName}.html`;
 };
 
