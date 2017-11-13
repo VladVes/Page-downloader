@@ -2,7 +2,7 @@ install:
 	npm install
 
 start:
-	npm run babel-node -- 'src/bin/pgdownloader.js'
+	npm run babel-node -- 'src/bin/pgloader.js'
 
 test:
 	npm test
@@ -15,4 +15,3 @@ publish:
 
 lint:
 	npm run eslint ./src/**
-

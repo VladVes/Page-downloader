@@ -1,6 +1,6 @@
 {
-  "name": "page-loader",
-  "version": "1.0.0",
+  "name": "pgloader",
+  "version": "1.0.1",
   "description": "page downloader",
   "main": "dist/index.js",
   "bin": {
@@ -28,11 +28,12 @@
   },
   "homepage": "https://github.com/VladVes/reponame#readme",
   "dependencies": {
+    "axios": "^0.17.0",
+    "commander": "^2.11.0",
     "listr": "^0.13.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "axios": "^0.17.0",
     "babel-cli": "*",
     "babel-core": "*",
     "babel-eslint": "*",
