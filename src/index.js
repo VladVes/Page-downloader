@@ -1,7 +1,7 @@
 import url from 'url';
 import nodePath from 'path';
 import axios from 'axios';
-import fs from 'mz';
+import fs from 'mz/fs';
 
 const makeFileName = (uri, dir) => {
   const { host, path } = url.parse(uri);
@@ -19,7 +19,7 @@ export default (uri, outputPath) => {
 
   axios.get(uri)
     .then((response) => {
-      fs.appendFile(fullFileName, response.data).then((writeErr) => {
+      fs.writeFile(fullFileName, response.data).then((writeErr) => {
         if (writeErr) {
           throw new Error(writeErr);
         }
