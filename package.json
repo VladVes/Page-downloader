@@ -38,6 +38,7 @@
     "babel-cli": "*",
     "babel-core": "*",
     "babel-eslint": "*",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "*",
     "babel-preset-stage-0": "*",
     "eslint": "*",
