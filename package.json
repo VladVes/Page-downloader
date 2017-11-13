@@ -1,6 +1,6 @@
 {
   "name": "pgloader",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "page downloader",
   "main": "dist/index.js",
   "bin": {

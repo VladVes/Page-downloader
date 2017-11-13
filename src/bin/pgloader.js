@@ -7,7 +7,7 @@ import loadPage from '../';
 program
   .version(app.version)
   .description('This program downloads html by given URL and save it to the local dir')
-  .option('-o, --output', 'output directory')
+  .option('-o, --output [path]', 'output directory')
   .arguments('<url>')
   .action((url) => {
     try {
