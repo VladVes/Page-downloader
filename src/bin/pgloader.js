@@ -1,3 +1,5 @@
+#! env node
+
 import program from 'commander';
 import * as app from '../../package.json';
 import pageLoad from '../';
