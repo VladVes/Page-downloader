@@ -1,0 +1,48 @@
+{
+  "name": "page-loader",
+  "version": "1.0.0",
+  "description": "page downloader",
+  "main": "dist/index.js",
+  "bin": {
+    "pgloader": "dist/bin/pgloader.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "babel-node": "babel-node",
+    "eslint": "eslint",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladVes/"
+  },
+  "keywords": [
+    "page",
+    "download"
+  ],
+  "author": "Vladimir Veselov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VladVes/insertname/issues"
+  },
+  "homepage": "https://github.com/VladVes/reponame#readme",
+  "dependencies": {
+    "listr": "^0.13.0",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "axios": "^0.17.0",
+    "babel-cli": "*",
+    "babel-core": "*",
+    "babel-eslint": "*",
+    "babel-preset-env": "*",
+    "babel-preset-stage-0": "*",
+    "eslint": "*",
+    "eslint-config-airbnb-base": "*",
+    "eslint-plugin-flowtype": "*",
+    "eslint-plugin-import": "*",
+    "eslint-plugin-jest": "*",
+    "jest": "*"
+  }
+}
