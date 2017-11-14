@@ -9,12 +9,6 @@ program
   .description('This program downloads html by given URL and save it to the local dir')
   .option('-o, --output [path]', 'directory to save downloaded page')
   .arguments('<url>')
-  .action((url) => {
-    try {
-        loadPage(url, program.output);
-    } catch (e) {
-      console.log('Error: ', e);
-    }
-  });
+  .action(url => loadPage(url, program.output).then(result => console.log(result)));
 
   program.parse(process.argv);

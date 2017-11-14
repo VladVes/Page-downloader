@@ -13,27 +13,23 @@ const makeFileName = (uri, dir) => {
 
 const getResponseData = (url) => {
   return axios.get(url)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((httpErr) => {
-      return new Error(httpErr);
-    });
+    .then(response => response.data)
+    .catch(httpErr => new Error(httpErr));
 };
 
 const writeToFile = (data, filenName) => {
   return fs.writeFile(filenName, data)
-    .then(() => console.log('Page saved successfully'), (writeErr) => {
-      return new Error(writeErr);
-    });
+    .then(() => 'Page saved successfully!', writeErr => new Error(writeErr));
 };
 
 const gen = function* (url, fileName) {
-  console.log("URL FROM GENERATOR: ", url);
-  console.log("FILENAME FROM GENERATOR: ", fileName);
-  const data = yield getResponseData(url);
-  //console.log("DATA: ", data);
-  yield writeToFile(data, fileName);
+  try {
+    const pageData = yield getResponseData(url);
+    const result = yield writeToFile(pageData, fileName);
+    return result;
+  } catch (e) {
+      return `Error: ${e.message}`;
+  }
 };
 
 export default (uri, outputPath) => {
@@ -42,23 +38,23 @@ export default (uri, outputPath) => {
 
   console.log('URL given: ', uri);
   console.log('PATH GIVEN: ', outputPath);
-  console.log("Page will be saved to: ", fullFileName);
+  console.log("Page will be saved as: ", fullFileName);
 
   const coroutine = (generator) => {
-    const process = generator(uri, fullFileName);
+    const iterator = generator(uri, fullFileName);
     const next = (result) => {
-      const value = resul.value;
+      const value = result.value;
       if (result.done) {
         return value;
       }
-      value.then(
-        data => next(process.next(data)),
-        err => next(process.throw(err))
+      return value.then(
+        data => next(iterator.next(data)),
+        err => next(iterator.throw(err))
       );
     }
 
-    return next(process.next());
+    return next(iterator.next());
   };
 
-  coroutine(gen);
+  return coroutine(gen);
 };
