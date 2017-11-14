@@ -13,13 +13,13 @@ const makeFileName = (uri, dir) => {
 
 const getResponseData = (url) => {
   return axios.get(url)
-    .then(response => response.data)
-    .catch(httpErr => new Error(httpErr));
+    .then(response => response.data, httpErr => Promise.reject(httpErr.message));
 };
 
 const writeToFile = (data, filenName) => {
+  const message = 'Page data has been saved successfully!';
   return fs.writeFile(filenName, data)
-    .then(() => 'Page saved successfully!', writeErr => new Error(writeErr));
+    .then(() => message, writeErr => Promise.reject(writeErr.message));
 };
 
 const gen = function* (url, fileName) {
@@ -28,7 +28,7 @@ const gen = function* (url, fileName) {
     const result = yield writeToFile(pageData, fileName);
     return result;
   } catch (e) {
-      return `Error: ${e.message}`;
+      return `Err: ${e}`;
   }
 };
 
@@ -36,8 +36,8 @@ export default (uri, outputPath) => {
   const directory = outputPath ? outputPath : __dirname;
   const fullFileName = makeFileName(uri, directory);
 
-  console.log('URL given: ', uri);
-  console.log('PATH GIVEN: ', outputPath);
+  console.log('Url: ', uri);
+  console.log('Path: ', outputPath);
   console.log("Page will be saved as: ", fullFileName);
 
   const coroutine = (generator) => {
@@ -47,6 +47,7 @@ export default (uri, outputPath) => {
       if (result.done) {
         return value;
       }
+      
       return value.then(
         data => next(iterator.next(data)),
         err => next(iterator.throw(err))
