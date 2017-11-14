@@ -15,15 +15,26 @@ const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tests'));
 axios.defaults.adapter = httpAdapter;
 
 describe('Testing loadPage function', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     nock(address)
       .get(pathToRes)
       .reply(200, body);
+  });
+  afterAll(() => {
+
   });
   it('should return success message', () => {
     expect.assertions(1);
     return loadPage(`${address}${pathToRes}`, tmpDir).then((message) => {
       expect(message).toBe(successMessage);
     });
+  });
+
+  it('should write data to file', () => {
+    const pathToFile = path.format({
+      dir: tmpDir,
+      base: 'github-com-VladVes.html',
+    });
+    expect(fs.readFileSync(pathToFile, 'utf8')).toBe('test data');
   });
 });

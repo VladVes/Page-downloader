@@ -11,4 +11,4 @@ program
   .arguments('<url>')
   .action(url => loadPage(url, program.output).then(result => console.log(result)));
 
-  program.parse(process.argv);
+program.parse(process.argv);
