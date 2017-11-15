@@ -36,11 +36,12 @@ const gen = function* gener(url, fileName) {
   }
 };
 
-export default (uri, outputPath = __dirname) => {
-  const fullFileName = makeFileName(uri, outputPath);
+export default (uri, outputPath) => {
+  const directoryToSave = outputPath || process.cwd();
+  const fullFileName = makeFileName(uri, directoryToSave);
 
   console.log('Url: ', uri);
-  console.log('Path: ', outputPath);
+  console.log('Path: ', directoryToSave);
   console.log('Page will be saved as: ', fullFileName);
 
   const coroutine = (generator) => {

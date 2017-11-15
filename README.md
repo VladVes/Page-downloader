@@ -22,5 +22,5 @@ npm install --save pgloader
 ```
 ## Usage:
 ```
- pgloader --output [path] <URL>
+ page-loader --output [path] <URL>
 ```
