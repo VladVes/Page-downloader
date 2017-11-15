@@ -18,26 +18,25 @@ const makeFileName = (uri, dir) => {
 };
 
 const getResponseData = url => axios.get(url)
-  .then(response => response.data, error => Promise.reject(error.message));
+  .then(response => response.data, error => Promise.reject(error));
 
-const writeToFile = (response, filenName) => {
-  const message = 'Page data has been saved successfully!';
-  response.then(data => fs.writeFile(filenName, data)
-    .then(() => message, error => Promise.reject(error.message)));
+const writeToFile = (responseData, filenName) => {
+  const sucMessage = 'Page data has been saved successfully!';
+  return responseData
+    .then(
+      data => fs.writeFile(filenName, data),
+      responseError => `Error: ${responseError.message}`
+    )
+    .then(errMessage => errMessage || sucMessage);
 };
 
 export default (url, outputPath) => {
-  const directoryToSave = outputPath || process.cwd();
-  const fileName = makeFileName(url, directoryToSave);
+  const dir = outputPath || process.cwd();
+  const fileName = makeFileName(url, dir);
 
   console.log('Url: ', url);
-  console.log('Path: ', directoryToSave);
+  console.log('Path: ', dir);
   console.log('Page will be saved as: ', fileName);
 
-  const response = getResponseData(url);
-  const result = writeToFile(response, fileName);
-
-  console.log("DATA: ", data);
-  console.log("RESULT: ", result);
-  return result;
+  return writeToFile(getResponseData(url), fileName);
 };
