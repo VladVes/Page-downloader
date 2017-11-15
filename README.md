@@ -1,5 +1,6 @@
  # Page downloader
 [![Code Climate](https://codeclimate.com/github/VladVes/project-lvl3-s130/badges/gpa.svg)](https://codeclimate.com/github/VladVes/project-lvl3-s130)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/fb98b6493c2108621067/test_coverage)](https://codeclimate.com/github/VladVes/project-lvl3-s130/test_coverage)
 [![Build Status](https://www.travis-ci.org/VladVes/project-lvl3-s130.svg?branch=master)](https://www.travis-ci.org/VladVes/project-lvl3-s130)
 
 ```
