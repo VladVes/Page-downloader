@@ -1,10 +1,10 @@
 {
   "name": "pgloader",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "page downloader",
   "main": "dist/index.js",
   "bin": {
-    "pgloader": "dist/bin/pgloader.js"
+    "page-loader": "dist/bin/page-loader.js"
   },
   "scripts": {
     "test": "jest",
