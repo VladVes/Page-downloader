@@ -5,7 +5,7 @@ import axios from 'axios';
 import fs from 'mz/fs';
 
 /*
-eslint no-shadow: ["error", { "allow": ["url"] }]
+eslint no-shadow: ["error", { "allow": ["data", "url", "fileName", error] }]
 */
 /*
 eslint-env es6
@@ -18,48 +18,26 @@ const makeFileName = (uri, dir) => {
 };
 
 const getResponseData = url => axios.get(url)
-  .then(response => response.data, httpErr => Promise.reject(httpErr.message));
+  .then(response => response.data, error => Promise.reject(error.message));
 
-const writeToFile = (data, filenName) => {
+const writeToFile = (response, filenName) => {
   const message = 'Page data has been saved successfully!';
-  return fs.writeFile(filenName, data)
-    .then(() => message, writeErr => Promise.reject(writeErr.message));
+  response.then(data => fs.writeFile(filenName, data)
+    .then(() => message, error => Promise.reject(error.message)));
 };
 
-const gen = function* gener(url, fileName) {
-  try {
-    const pageData = yield getResponseData(url);
-    const result = yield writeToFile(pageData, fileName);
-    return result;
-  } catch (e) {
-    return `Err: ${e}`;
-  }
-};
-
-export default (uri, outputPath) => {
+export default (url, outputPath) => {
   const directoryToSave = outputPath || process.cwd();
-  const fullFileName = makeFileName(uri, directoryToSave);
+  const fileName = makeFileName(url, directoryToSave);
 
-  console.log('Url: ', uri);
+  console.log('Url: ', url);
   console.log('Path: ', directoryToSave);
-  console.log('Page will be saved as: ', fullFileName);
+  console.log('Page will be saved as: ', fileName);
 
-  const coroutine = (generator) => {
-    const iterator = generator(uri, fullFileName);
-    const next = (result) => {
-      const { value } = result;
-      if (result.done) {
-        return value;
-      }
+  const response = getResponseData(url);
+  const result = writeToFile(response, fileName);
 
-      return value.then(
-        data => next(iterator.next(data)),
-        err => next(iterator.throw(err)),
-      );
-    };
-
-    return next(iterator.next());
-  };
-
-  return coroutine(gen);
+  console.log("DATA: ", data);
+  console.log("RESULT: ", result);
+  return result;
 };
