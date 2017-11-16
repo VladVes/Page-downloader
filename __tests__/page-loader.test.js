@@ -24,6 +24,7 @@ describe('Testing loadPage function: ', () => {
   afterAll(() => {
     //here should be cleaner
   });
+  
   it('should return success message', () => {
     const tmpDir = mkdirTmp();
     expect.assertions(1);

@@ -45,10 +45,11 @@
   "homepage": "https://github.com/VladVes/reponame#readme",
   "dependencies": {
     "axios": "^0.17.0",
+    "babel-polyfill": "^6.26.0",
+    "cheerio": "^1.0.0-rc.2",
     "commander": "^2.11.0",
     "listr": "^0.13.0",
     "lodash": "^4.17.4",
-    "babel-polyfill": "^6.26.0",
     "mz": "^2.7.0"
   },
   "devDependencies": {
