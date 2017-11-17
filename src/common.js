@@ -26,7 +26,7 @@ const writeToFile = (resourse, filenName) => {
   return resourse.then(
     data => fs.writeFile(filenName, data),
     error => `Error: ${error.message}`,
-  ).then(errMessage => errMessage || sucMessage);
+  ).then(errMessage => (errMessage || sucMessage));
 };
 
 export {makeName, getResponse, writeToFile};

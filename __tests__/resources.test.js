@@ -4,7 +4,7 @@ import path from 'path';
 import nock from 'nock';
 import axios from 'axios';
 import httpAdapter from 'axios/lib/adapters/http';
-import {getLinks, fetchResources, addLocalNamesToLinksColl, updateHtml} from '../src/resources';
+import {getLinks, fetchResources, updateLinks, updateHtml} from '../src/resources';
 
 /*
 const address = 'https://hexlet.io';
@@ -36,35 +36,42 @@ describe('Fetch resuourses and save to local dir', () => {
   it('should return local links', () => {
     const html = fs.readFileSync(getFixture('source'), 'utf8');
     const expected = [
-      {tag: 'img', src: '/imgPth1/img.png'},
-      {tag: 'script', src: '/local/script.js'},
-      {tag: 'img', src: '/local/image.jpg'},
-      {tag: 'link', src: '/local/link.lnk'},
+      {type: 'img', src: '/imgPth1/img.png'},
+      {type: 'script', src: '/local/script.js'},
+      {type: 'img', src: '/local/image.jpg'},
+      {type: 'link', src: '/local/link.lnk'},
     ];
     expect(getLinks(html, '[src]', /^(\w+:)?\/{2,}/)).toEqual(expected);
   });
 
-  it('should update links collection with local names', () => {
+  it('should update links collection', () => {
+    const dir = `example-com`;
     const coll = [
-      {tag: 'img', src: '/imgPth1/img.png'},
-      {tag: 'script', src: '/first/second/script.js'},
+      {
+        type: 'img',
+        src: '/imgPth1/img.png',
+      },
     ];
     const expected = [
-      {tag: 'img', src: '/imgPth1/img.png', localSrc: '/imgPth1-img.png'},
-      {tag: 'script', src: '/first/second/script.js', localSrc: '/first-second-script.js'},
+      {
+        type: 'img',
+        src: '/imgPth1/img.png',
+        localSrc: 'example-com/imgPth1-img.png',
+        fileName: 'imgPth1-img.png',
+      },
     ];
 
-    expect(addLocalNamesToLinksColl(coll)).toEqual(expected);
+    expect(updateLinks(coll, dir)).toEqual(expected);
   });
 
   it('should update html with local links', () => {
     const url = 'https://example.com/assets';
     const html = fs.readFileSync(getFixture('source'), 'utf8');
     const expected = fs.readFileSync(getFixture('dist'), 'utf8');
-    const linksColl = addLocalNamesToLinksColl(getLinks(html, '[src]', /^(\w+:)?\/{2,}/));
     const localDir = 'example-com-assets_files';
+    const linksColl = updateLinks(getLinks(html, '[src]', /^(\w+:)?\/{2,}/), localDir);
 
-    expect(updateHtml(html, localDir, linksColl)).toBe(expected);
+    expect(updateHtml(html, linksColl)).toBe(expected);
   });
 
 
