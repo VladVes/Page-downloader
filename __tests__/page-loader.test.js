@@ -34,8 +34,9 @@ describe('Testing loadPage function: ', () => {
 
     const expected = `${fileName}${message}`;
     expect.assertions(1);
-    return loadPage(`${address}${pathToRes}`, tmpDir).then((message) => {
-      expect(message).toBe(expected);
+    return loadPage(`${address}${pathToRes}`, tmpDir)
+      .then((message) => {
+        expect(message[0]).toBe(expected);
     });
   });
 
@@ -47,7 +48,7 @@ describe('Testing loadPage function: ', () => {
     });
     expect.assertions(1);
     return loadPage(`${address}${pathToRes}`, tmpDir).then(() => {
-      expect(fs.readFileSync(fileName, 'utf8')).toBe('test data');
+      expect(fs.readFileSync(fileName, 'utf8')).toBe('test data\n');
     });
   });
 });

@@ -67,7 +67,7 @@ const fetchResources = (response, url, outputDir) => {
         const updatedEl = {
           type: el.type,
           data: resp,
-          location: `${resourcesDir}${nodePath.sep}${el.fileName}`;
+          location: `${resourcesDir}${nodePath.sep}${el.fileName}`,
         };
         return [...acc, updatedEl];
       }, preparedData);
@@ -75,8 +75,10 @@ const fetchResources = (response, url, outputDir) => {
     .catch(error => console.log(error.message));
 };
 
-const saveData = (coll) => {
-  return Promise.all(coll.map(el => writeToFile(el.data, el.location, el.type);
+const saveData = (dataColl) => {
+  return dataColl.then((data) => {
+    return data.map(el => writeToFile(el.data, el.location, el.type));
+  }).then((result) => Promise.all(result));
 };
 
 export {getLinks, fetchResources, updateLinks, updateHtml, saveData};

@@ -12,10 +12,10 @@ export default (url, outputPath) => {
   const outputDir = outputPath || process.cwd();
 
   console.log('Url: ', url);
-  console.log('Path: ', outputDir);
-  console.log('Page will be saved as: ', fileName);
+  console.log('Path: ', outputPath);
+  console.log('Page will be saved as: ', outputDir);
 
   const response = getResponse(url);
   const data = fetchResources(response, url, outputDir);
-  return saveResources(data);
+  return saveData(data);
 };
