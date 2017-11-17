@@ -4,7 +4,7 @@ import path from 'path';
 import nock from 'nock';
 import axios from 'axios';
 import httpAdapter from 'axios/lib/adapters/http';
-import {getLinks, fetchResources} from '../src/resources';
+import {getLinks, fetchResources, addLocalNamesToLinksColl, updateHtml} from '../src/resources';
 
 /*
 const address = 'https://hexlet.io';
@@ -13,7 +13,7 @@ const pathToRes = '/courses';
 
 axios.defaults.adapter = httpAdapter;
 
-describe('Function should fetch resuourses and save to local dir', () => {
+describe('Fetch resuourses and save to local dir', () => {
 /*
   BeforeAll(() => {
     const fixture = path.format({
@@ -26,21 +26,47 @@ describe('Function should fetch resuourses and save to local dir', () => {
       .reply(200, html);
   });
 */
+  const getFixture = (name) => {
+    return path.format({
+      dir: __dirname,
+      base: `__fixtures__${path.sep}${name}.html`,
+    });
+  };
 
   it('should return local links', () => {
-    const fixture = path.format({
-      dir: __dirname,
-      base: '__fixtures__/source.html',
-    });
-    console.log('fixture: ', fixture);
-    const html = fs.readFileSync(fixture, 'utf8');
+    const html = fs.readFileSync(getFixture('source'), 'utf8');
     const expected = [
       {tag: 'img', src: '/imgPth1/img.png'},
       {tag: 'script', src: '/local/script.js'},
       {tag: 'img', src: '/local/image.jpg'},
       {tag: 'link', src: '/local/link.lnk'},
     ];
-    expect(getLinks(html)).toEqual(expected);
+    expect(getLinks(html, '[src]', /^(\w+:)?\/{2,}/)).toEqual(expected);
   });
+
+  it('should update links collection with local names', () => {
+    const coll = [
+      {tag: 'img', src: '/imgPth1/img.png'},
+      {tag: 'script', src: '/first/second/script.js'},
+    ];
+    const expected = [
+      {tag: 'img', src: '/imgPth1/img.png', localSrc: '/imgPth1-img.png'},
+      {tag: 'script', src: '/first/second/script.js', localSrc: '/first-second-script.js'},
+    ];
+
+    expect(addLocalNamesToLinksColl(coll)).toEqual(expected);
+  });
+
+  it('should update html with local links', () => {
+    const url = 'https://example.com/assets';
+    const html = fs.readFileSync(getFixture('source'), 'utf8');
+    const expected = fs.readFileSync(getFixture('dist'), 'utf8');
+    const linksColl = addLocalNamesToLinksColl(getLinks(html, '[src]', /^(\w+:)?\/{2,}/));
+    const localDir = 'example-com-assets_files';
+
+    expect(updateHtml(html, localDir, linksColl)).toBe(expected);
+  });
+
+
 
 });

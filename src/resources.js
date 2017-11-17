@@ -11,25 +11,39 @@ eslint no-shadow: ["error", { "allow": ["data", "url", "fileName", "error"] }]
 eslint-env es6
 */
 
-const getLinks = (html) => {
-//  console.log("FROM get links!!!: ", html);
+const getLinks = (html, selector, predicate) => {
   const $ = cheerio.load(html);
-  //const result = $('img, link, script').toArray()
-  const result = $('[src]').toArray()
+  return $(selector).toArray()
     .map((el) => {
-      //console.log("FROM MAP ALL: ", el);
-      console.log("FROM MAP : ", { tag: el.name, src: el.attribs.src });
-      return { tag: el.name, src: el.attribs.src }; })
-    .filter((el) => !/^(\w+:)?\/{2,}/.test(el.src));
-  console.log("FROM get links RESULT : ", result);
-  return result;
+      return { tag: el.name, src: el.attribs.src };
+    })
+    .filter((el) => !predicate.test(el.src));
 };
 
-const fetchResources = (response, url, dir) => {
+const addLocalNamesToLinksColl = (linksColl) => {
+  return linksColl.reduce((acc, el) => {
+    const {root, dir, ext, name} = nodePath.parse(el.src);
+    el.localSrc = `${root}${(nodePath.join(dir, name).replace(/\W/g, '-')).slice(1)}${ext}`;
+    return [...acc, el];
+  }, []);
+};
+
+const updateHtml = (html, localDir, linksColl) => {
+  const result = linksColl.reduce((acc, el) => {
+    const newSrc = `${localDir}${el.localSrc}`;
+    const $ = cheerio.load(acc);
+    $(`[src="${el.src}"]`).removeAttr('src').attr('src', newSrc);
+    return $.html();
+  }, html);
+
+  return `${result}\n`;
+};
+
+const fetchResources = (response, url, localDir) => {
   console.log("FROM fetch!");
   return response.then(html => {
-    //console.log("FROM FETCH: ", html);
-    getLinks(html);
+
+    getLinks(html, '[src]', /^(\w+:)?\/{2,}/);
   })
     .then(links => Promise.all(
 
@@ -37,4 +51,4 @@ const fetchResources = (response, url, dir) => {
     .catch(error => error.message);
 };
 
-export {getLinks, fetchResources};
+export {getLinks, fetchResources, addLocalNamesToLinksColl, updateHtml};
