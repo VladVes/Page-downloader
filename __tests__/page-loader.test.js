@@ -27,12 +27,11 @@ describe('Testing loadPage function: ', () => {
 
   it('should return success message', () => {
     const tmpDir = mkdirTmp();
-    console.log("FROM TEST TMPDIR: ", tmpDir);
     const fileName = path.format({
       dir: tmpDir,
       base: 'hexlet-io-courses.html',
     });
-    console.log("FROM TEST TMPDIR: ", tmpDir);
+
     const expected = `${fileName}${message}`;
     expect.assertions(1);
     return loadPage(`${address}${pathToRes}`, tmpDir).then((message) => {

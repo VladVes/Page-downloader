@@ -18,8 +18,13 @@ export default (url, outputPath) => {
   console.log('Page will be saved as: ', fileName);
 
   const response = getResponse(url);
-  const links = fetchResources(response, url, resDirName);
-  //const newHtml = convertLinksToLocal(links, response);
+/*
+  fs.mkdir(resDirName)
+    .then(() => {fetchResources(response, url, resDirName)})
+    .catch(err => console.log(err.message)
+  );
+*/
+  fetchResources(response, url, resDirName);
 
   return writeToFile(response, fileName);
 };

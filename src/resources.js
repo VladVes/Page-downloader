@@ -40,9 +40,9 @@ const updateHtml = (html, localDir, linksColl) => {
 };
 
 const fetchResources = (response, url, localDir) => {
-  console.log("FROM fetch!");
   return response.then(html => {
-
+    console.log("LOCAL DIR: ", localDir);
+    
     getLinks(html, '[src]', /^(\w+:)?\/{2,}/);
   })
     .then(links => Promise.all(
