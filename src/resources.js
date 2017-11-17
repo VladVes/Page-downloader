@@ -1,7 +1,8 @@
-import url from 'url';
+import nodeUrl from 'url';
 import nodePath from 'path';
 import fs from 'mz/fs';
 import cheerio from 'cheerio';
+import axios from 'axios';
 import { makeName, getResponse, writeToFile } from './common';
 
 /*
@@ -45,10 +46,7 @@ const updateHtml = (html, linksColl) => {
   return `${result}\n`;
 };
 
-const fetchResources = (response, url, outputDir) => {
-  const resourcesDir = makeName(url, outputDir, '_files');
-  const htmlFileName = makeName(url, outputDir, '.html');
-
+const fetchResources = (response, url, resourcesDir, htmlFileName) => {
   return response
     .then(html => {
       const linksColl = getLinks(html, '[src]', /^(\w+:)?\/{2,}/);
@@ -61,8 +59,20 @@ const fetchResources = (response, url, outputDir) => {
         {type: 'text', data: Promise.resolve(result.html), location: htmlFileName},
       ];
       return result.links.reduce((acc, el) => {
-        const responseType = el.type === 'img' ? 'stream' : '';
-        const uri = `${url}${el.src}`;
+        const responseType = el.type === 'img' ? 'stream' : 'json';
+        const { protocol, host } = nodeUrl.parse(url);
+        const uri = `${protocol}//${host}${el.src}`
+        console.log('fetching uri: ', uri);
+        /*
+        axios.defaults.baseURL = `${protocol}//${host}${nodePath.sep}`;
+        const conf = {
+          method: 'GET',
+          url: el.src,
+          baseURL: `${protocol}//${host}${nodePath.sep}`,
+          timeout: 1000,
+          port: 80,
+        }
+        */
         const resp = getResponse(uri, responseType);
         const updatedEl = {
           type: el.type,
@@ -78,7 +88,7 @@ const fetchResources = (response, url, outputDir) => {
 const saveData = (dataColl) => {
   return dataColl.then((data) => {
     return data.map(el => writeToFile(el.data, el.location, el.type));
-  }).then((result) => Promise.all(result));
+  }).then(result => Promise.all(result));
 };
 
 export {getLinks, fetchResources, updateLinks, updateHtml, saveData};

@@ -21,14 +21,14 @@ const getResponse = (url, responseType) => {
     .then(response => response.data, error => Promise.reject(error));
 };
 
-const writeToFile = (resourse, filenName, type) => {
-  const sucMessage = `${filenName} has been saved successfully!`;
+const writeToFile = (resourse, fileName, type) => {
+  const sucMessage = `${fileName} has been saved successfully!`;
   return resourse.then(
     (data) => {
       if(type === 'img') {
         return data.pipe(fs.createWriteStream(fileName));
       }
-      return fs.writeFile(filenName, data);
+      return fs.writeFile(fileName, data);
     },
     error => `Error: ${error.message}`,
   ).then(errMessage => (errMessage || sucMessage));
