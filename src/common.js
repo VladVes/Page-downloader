@@ -22,7 +22,7 @@ const getResponse = (url, responseType) => {
   log();
   return axios({ method: 'get', url, responseType })
     .then(response => response.data, error => error.message);
-}
+};
 
 const writeToFile = (resourse, fileName, type) => {
   const baseName = nodePath.basename(fileName);
