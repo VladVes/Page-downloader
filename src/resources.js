@@ -1,17 +1,17 @@
 import nodeUrl from 'url';
 import nodePath from 'path';
 import cheerio from 'cheerio';
+import debug from 'debug';
 import { getResponse } from './common';
 
 /*
 eslint no-shadow: ["error", { "allow": ["data", "url", "fileName", "error"] }]
 */
 /*
-eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["el"] }]
-*/
-/*
 eslint-env es6
 */
+
+const log = debug('page-loader:');
 
 const getLinks = (html, selector, predicate) => {
   const $ = cheerio.load(html);
@@ -26,15 +26,16 @@ const getLinks = (html, selector, predicate) => {
 const updateLinks = (linksColl, dirName) =>
   linksColl.reduce((acc, el) => {
     const { dir, ext, name } = nodePath.parse(el.src);
+    const newEl = { ...el };
     const newName = `${(nodePath.join(dir, name).replace(/\W/g, '-')).slice(1)}${ext}`;
-    el.localSrc = nodePath.format({
+    newEl.localSrc = nodePath.format({
       root: '/ignored',
       dir: dirName,
       base: newName,
       ext: 'ignored',
     });
-    el.fileName = newName;
-    return [...acc, el];
+    newEl.fileName = newName;
+    return [...acc, newEl];
   }, []);
 
 const updateHtml = (html, linksColl) => {
@@ -58,7 +59,7 @@ const fetchResources = (html, url, resourcesDir, htmlFileName) => {
   const result = updatedLinksColl.reduce((acc, el) => {
     const responseType = el.type === 'img' ? 'stream' : 'json';
     const { protocol, host } = nodeUrl.parse(url);
-    console.log('Fetching... ', `${protocol}//${host}${el.src}`);
+    log(`Fetching... ${protocol}//${host}${el.src}`);
     const newEl = {
       type: el.type,
       data: getResponse(`${protocol}//${host}${el.src}`, responseType),

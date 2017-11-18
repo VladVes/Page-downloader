@@ -11,7 +11,7 @@ program
   .arguments('<url>')
   .action((url) => {
     const outputDir = program.output || process.cwd();
-    loadPage(url, outputDir).then(messages => messages.forEach(msg => console.log(msg)));
+    loadPage(url, outputDir);
   });
 
 program.parse(process.argv);
