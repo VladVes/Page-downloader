@@ -9,6 +9,9 @@ program
   .description('This program downloads resourse by given URL and save it to the local dir')
   .option('-o, --output [path]', 'directory to save downloaded page')
   .arguments('<url>')
-  .action(url => loadPage(url, program.output));
+  .action((url) => {
+    const outputDir = program.output || process.cwd();
+    loadPage(url, outputDir).then(messages => messages.forEach(msg => console.log(msg)));
+  });
 
 program.parse(process.argv);

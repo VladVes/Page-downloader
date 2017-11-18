@@ -1,7 +1,7 @@
 import nodeUrl from 'url';
 import nodePath from 'path';
 import cheerio from 'cheerio';
-import { getResponse, writeToFile } from './common';
+import { getResponse } from './common';
 
 /*
 eslint no-shadow: ["error", { "allow": ["data", "url", "fileName", "error"] }]
@@ -48,37 +48,26 @@ const updateHtml = (html, linksColl) => {
   return `${result}\n`;
 };
 
-const fetchResources = (response, url, resourcesDir, htmlFileName) =>
-  response
-    .then((html) => {
-      const linksColl = getLinks(html, 'img[src], script[src], link[href]', /^(\w+:)?\/{2,}/);
-      const updatedLinksColl = updateLinks(linksColl, resourcesDir);
-      const updatedHtml = updateHtml(html, updatedLinksColl);
-      return { html: updatedHtml, links: updatedLinksColl };
-    })
-    .then((result) => {
-      const preparedData = [
-        { type: 'text', data: Promise.resolve(result.html), location: htmlFileName },
-      ];
-      return result.links.reduce((acc, el) => {
-        const responseType = el.type === 'img' ? 'stream' : 'json';
-        const { protocol, host } = nodeUrl.parse(url);
-        const uri = `${protocol}//${host}${el.src}`;
-        console.log('Fetching... ', uri);
-        const resp = getResponse(uri, responseType);
-        const updatedEl = {
-          type: el.type,
-          data: resp,
-          location: `${resourcesDir}${nodePath.sep}${el.fileName}`,
-        };
-        return [...acc, updatedEl];
-      }, preparedData);
-    })
-    .catch(error => console.log(error.message));
+const fetchResources = (html, url, resourcesDir, htmlFileName) => {
+  const linksColl = getLinks(html, 'img[src], script[src], link[href]', /^(\w+:)?\/{2,}/);
+  const updatedLinksColl = updateLinks(linksColl, resourcesDir);
+  const updatedHtml = updateHtml(html, updatedLinksColl);
+  const coll = [
+    { type: 'html', data: Promise.resolve(updatedHtml), location: htmlFileName },
+  ];
+  const result = updatedLinksColl.reduce((acc, el) => {
+    const responseType = el.type === 'img' ? 'stream' : 'json';
+    const { protocol, host } = nodeUrl.parse(url);
+    console.log('Fetching... ', `${protocol}//${host}${el.src}`);
+    const newEl = {
+      type: el.type,
+      data: getResponse(`${protocol}//${host}${el.src}`, responseType),
+      location: `${resourcesDir}${nodePath.sep}${el.fileName}`,
+    };
+    return [...acc, newEl];
+  }, coll);
 
-const saveData = dataColl =>
-  dataColl
-    .then(data => Promise.all(data.map(el => writeToFile(el.data, el.location, el.type))))
-    .catch(err => err.message);
+  return result;
+};
 
-export { getLinks, fetchResources, updateLinks, updateHtml, saveData };
+export { getLinks, fetchResources, updateLinks, updateHtml };

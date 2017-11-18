@@ -1,6 +1,6 @@
 import fs from 'mz/fs';
-import { makeName, getResponse } from './common';
-import { fetchResources, saveData } from './resources';
+import { makeName, getResponse, writeToFile } from './common';
+import { fetchResources } from './resources';
 
 /*
 eslint no-shadow: ["error", { "allow": ["data", "url", "fileName", "error"] }]
@@ -9,16 +9,16 @@ eslint no-shadow: ["error", { "allow": ["data", "url", "fileName", "error"] }]
 eslint-env es6
 */
 
-export default (url, outputPath) => {
-  const outputDir = outputPath || process.cwd();
+export default (url, outputDir) => {
   const resourcesDir = makeName(url, outputDir, '_files');
   const htmlFileName = makeName(url, outputDir, '.html');
 
   console.log('Url: ', url);
-  console.log('Path: ', outputPath);
   console.log('Page will be saved to: ', outputDir);
 
-  const response = getResponse(url);
-  const data = fetchResources(response, url, resourcesDir, htmlFileName);
-  return fs.mkdir(resourcesDir).then(() => saveData(data)).catch(e => e.message);
+  return fs.mkdir(resourcesDir)
+    .then(() => getResponse(url))
+    .then(htmlPage => fetchResources(htmlPage, url, resourcesDir, htmlFileName))
+    .then(dataColl => Promise.all(dataColl.map(el => writeToFile(el.data, el.location, el.type))))
+    .catch(err => console.log(err.message));
 };

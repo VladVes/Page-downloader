@@ -27,12 +27,7 @@ describe('Testing loadPage function: ', () => {
 
   it('should return success message', () => {
     const tmpDir = mkdirTmp();
-    const fileName = path.format({
-      dir: tmpDir,
-      base: 'hexlet-io-courses.html',
-    });
-
-    const expected = `${fileName}${message}`;
+    const expected = `hexlet-io-courses.html${message}`;
     expect.assertions(1);
     return loadPage(`${address}${pathToRes}`, tmpDir)
       .then((message) => {
