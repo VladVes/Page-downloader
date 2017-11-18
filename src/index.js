@@ -1,6 +1,6 @@
+import fs from 'mz/fs';
 import { makeName, getResponse } from './common';
 import { fetchResources, saveData } from './resources';
-import fs from 'mz/fs';
 
 /*
 eslint no-shadow: ["error", { "allow": ["data", "url", "fileName", "error"] }]
@@ -16,7 +16,7 @@ export default (url, outputPath) => {
 
   console.log('Url: ', url);
   console.log('Path: ', outputPath);
-  console.log('Page will be saved as: ', outputDir);
+  console.log('Page will be saved to: ', outputDir);
 
   const response = getResponse(url);
   const data = fetchResources(response, url, resourcesDir, htmlFileName);

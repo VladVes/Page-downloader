@@ -16,22 +16,21 @@ const makeName = (uri, dir, type) => {
   return `${dir}${nodePath.sep}${name}${type}`;
 };
 
-const getResponse = (url, responseType) => {
-  return axios({ method: 'get', url, responseType })
-    .then(response => response.data, error => Promise.reject(error));
-};
+const getResponse = (url, responseType) => axios({ method: 'get', url, responseType })
+  .then(response => response.data, error => Promise.reject(error));
 
 const writeToFile = (resourse, fileName, type) => {
   const sucMessage = `${fileName} has been saved successfully!`;
   return resourse.then(
     (data) => {
-      if(type === 'img') {
+      if (type === 'img') {
         return data.pipe(fs.createWriteStream(fileName));
       }
+
       return fs.writeFile(fileName, data);
     },
     error => `Error: ${error.message}`,
   ).then(errMessage => (errMessage || sucMessage));
 };
 
-export {makeName, getResponse, writeToFile};
+export { makeName, getResponse, writeToFile };

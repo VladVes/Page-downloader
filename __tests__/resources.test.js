@@ -39,9 +39,9 @@ describe('Fetch resuourses and save to local dir', () => {
       {type: 'img', src: '/imgPth1/img.png'},
       {type: 'script', src: '/local/script.js'},
       {type: 'img', src: '/local/image.jpg'},
-      {type: 'link', src: '/local/link.lnk'},
+      {type: 'link', src: '/local/link.css'},
     ];
-    expect(getLinks(html, '[src]', /^(\w+:)?\/{2,}/)).toEqual(expected);
+    expect(getLinks(html, 'img[src], script[src], link[href]', /^(\w+:)?\/{2,}/)).toEqual(expected);
   });
 
   it('should update links collection', () => {
@@ -69,7 +69,7 @@ describe('Fetch resuourses and save to local dir', () => {
     const html = fs.readFileSync(getFixture('source'), 'utf8');
     const expected = fs.readFileSync(getFixture('dist'), 'utf8');
     const localDir = 'example-com-assets_files';
-    const linksColl = updateLinks(getLinks(html, '[src]', /^(\w+:)?\/{2,}/), localDir);
+    const linksColl = updateLinks(getLinks(html, 'img[src], script[src], link[href]', /^(\w+:)?\/{2,}/), localDir);
 
     expect(updateHtml(html, linksColl)).toBe(expected);
   });
