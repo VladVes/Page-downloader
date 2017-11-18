@@ -18,8 +18,11 @@ const makeName = (uri, dir, type) => {
   return `${dir}${nodePath.sep}${name}${type}`;
 };
 
-const getResponse = (url, responseType) => axios({ method: 'get', url, responseType })
-  .then(response => response.data, error => error.message);
+const getResponse = (url, responseType) => {
+  log();
+  return axios({ method: 'get', url, responseType })
+    .then(response => response.data, error => error.message);
+}
 
 const writeToFile = (resourse, fileName, type) => {
   const baseName = nodePath.basename(fileName);
