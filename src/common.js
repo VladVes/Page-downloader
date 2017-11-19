@@ -4,12 +4,6 @@ import fs from 'mz/fs';
 import axios from 'axios';
 import debug from 'debug';
 
-/*
-eslint no-shadow: ["error", { "allow": ["data", "url", "fileName", "error"] }]
-*/
-/*
-eslint-env es6
-*/
 const log = debug('page-loader:');
 
 const makeName = (uri, dir, type) => {
@@ -18,9 +12,9 @@ const makeName = (uri, dir, type) => {
   return `${dir}${nodePath.sep}${name}${type}`;
 };
 
-const getResponse = (url, responseType) => {
-  log(`GET ${url} Response type: ${responseType}`);
-  return axios({ method: 'get', url, responseType })
+const getResponse = (ur, responseType) => {
+  log(`GET ${ur} Response type: ${responseType}`);
+  return axios({ method: 'get', url: ur, responseType })
     .then((response) => {
       log('Data received successfully');
       return response.data;

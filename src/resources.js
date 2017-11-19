@@ -4,13 +4,6 @@ import cheerio from 'cheerio';
 import debug from 'debug';
 import { getResponse } from './common';
 
-/*
-eslint no-shadow: ["error", { "allow": ["data", "url", "fileName", "error"] }]
-*/
-/*
-eslint-env es6
-*/
-
 const log = debug('page-loader:');
 
 const getLinks = (html, selector, predicate) => {

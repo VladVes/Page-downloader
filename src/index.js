@@ -3,13 +3,6 @@ import debug from 'debug';
 import { makeName, getResponse, writeToFile, updateErrMessage } from './common';
 import { fetchResources } from './resources';
 
-/*
-eslint no-shadow: ["error", { "allow": ["data", "url", "fileName", "error"] }]
-*/
-/*
-eslint-env es6
-*/
-
 export default (url, outputDir) => {
   const log = debug('page-loader:');
   const resourcesDir = makeName(url, outputDir, '_files');

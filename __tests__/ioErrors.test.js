@@ -50,8 +50,7 @@ describe('IO errors', () => {
     const errCode = '404';
     const expected = `Request failed with status code ${errCode}`;
     expect.assertions(1);
-    return getResponse('https://hexlet.io/nopage').catch((err) => {
-      console.log(err.message);
+    return getResponse('https://hexlet.io/nopage', 'json').catch((err) => {
       expect(err.message).toBe(expected);
     });
   });
