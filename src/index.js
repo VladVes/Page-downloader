@@ -1,6 +1,5 @@
 import fs from 'mz/fs';
 import debug from 'debug';
-import listr from 'listr';
 import { makeName, getResponse, writeToFile, updateErrMessage } from './common';
 import { fetchResources } from './resources';
 
@@ -15,9 +14,7 @@ export default (url, outputDir) => {
   return fs.mkdir(resourcesDir)
     .then(() => getResponse(url))
     .then(htmlPage => fetchResources(htmlPage, url, resourcesDir, htmlFileName))
-    .then(dataColl => Promise.all(dataColl.map((el) => {
-      return writeToFile(el.data, el.location, el.type);
-    })))
+    .then(dataColl => Promise.all(dataColl.map(el => writeToFile(el.data, el.location, el.type))))
     .then((flowMessages) => {
       log('Jobe well done');
       process.exitCode = 0;

@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import program from 'commander';
-import listr from 'listr';
+import Listr from 'listr';
 import * as app from '../../package.json';
 import loadPage from '../';
 
@@ -13,7 +13,7 @@ program
   .arguments('<url>')
   .action((url) => {
     const outputDir = program.output || process.cwd();
-    const tasks = new listr([
+    const tasks = new Listr([
       {
         title: `Loading page: ${url}`,
         task: () => loadPage(url, outputDir)
@@ -21,10 +21,16 @@ program
             if (process.exitCode > 0) {
               throw new Error(`Something went wrong: ${message}`);
             } else {
-              message.forEach(msg => {});
+              message.forEach((msg) => {
+                const task2 = new Listr([{
+                  title: `Fetching... ${msg}`,
+                  task: () => {},
+                }]);
+                task2.run();
+              });
             }
           }),
-        }
+      },
     ]);
     tasks.run();
   });
