@@ -11,7 +11,15 @@ program
   .arguments('<url>')
   .action((url) => {
     const outputDir = program.output || process.cwd();
-    loadPage(url, outputDir);
+    loadPage(url, outputDir)
+      .then((message) => {
+        if (process.exitCode > 0) {
+          console.error(`Something went wrong: ${message}`);
+        } else {
+          message.forEach(msg => console.log(msg));
+        }
+        process.exit();
+      });
   });
 
 program.parse(process.argv);
