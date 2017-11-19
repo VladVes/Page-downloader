@@ -1,8 +1,10 @@
 #! /usr/bin/env node
 
 import program from 'commander';
+import listr from 'listr';
 import * as app from '../../package.json';
 import loadPage from '../';
+
 
 program
   .version(app.version)
@@ -11,15 +13,20 @@ program
   .arguments('<url>')
   .action((url) => {
     const outputDir = program.output || process.cwd();
-    loadPage(url, outputDir)
-      .then((message) => {
-        if (process.exitCode > 0) {
-          console.error(`Something went wrong: ${message}`);
-        } else {
-          message.forEach(msg => console.log(msg));
+    const tasks = new listr([
+      {
+        title: `Loading page: ${url}`,
+        task: () => loadPage(url, outputDir)
+          .then((message) => {
+            if (process.exitCode > 0) {
+              throw new Error(`Something went wrong: ${message}`);
+            } else {
+              message.forEach(msg => {});
+            }
+          }),
         }
-        process.exit();
-      });
+    ]);
+    tasks.run();
   });
 
 program.parse(process.argv);

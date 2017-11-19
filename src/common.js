@@ -55,7 +55,7 @@ const updateErrMessage = (err) => {
     case 'EACCES':
       return `You don't have permisson to write or directory is write protected: ${err.path}`;
     case 'ENOTFOUND':
-      return `Seems to be requested page dosn't exist: ${err.message}`;
+      return `Seems to be requested page doesn't exist: ${err.message}`;
     default:
       return err.message;
   }
