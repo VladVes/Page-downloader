@@ -28,17 +28,26 @@ const getResponse = (url, responseType) => {
     .catch(err => log(`Data receiving error: ${err.message}`));
 };
 
-const writeToFile = (resourse, fileName, type) => {
+const writeToFile = (resource, fileName, type) => {
   const baseName = nodePath.basename(fileName);
   const defaultMessage = `${baseName} has been saved!`;
-  return resourse.then((data) => {
+  return resource.then((data) => {
     if (type === 'img') {
       const stream = data.pipe(fs.createWriteStream(fileName));
       return nodePath.basename(`${stream.path} has been saved!`);
     }
     return fs.writeFile(fileName, data);
-  }).then(streamMessage => log(`${(streamMessage || defaultMessage)}`))
-    .catch(err => log(`Write file error: ${err.message}`));
+  })
+  .then((streamMessage) => {
+    const msg = `${(streamMessage || defaultMessage)}`;
+    log(`File: ${msg}`);
+    return msg;
+  })
+  .catch((err) => {
+    log(`Write file error: ${err.message}`);
+    return(Promise.reject(err)); //neet to reach apper catch
+  });
+
 };
 
 export { makeName, getResponse, writeToFile };

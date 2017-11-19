@@ -22,5 +22,14 @@ export default (url, outputDir) => {
     .then(() => getResponse(url))
     .then(htmlPage => fetchResources(htmlPage, url, resourcesDir, htmlFileName))
     .then(dataColl => Promise.all(dataColl.map(el => writeToFile(el.data, el.location, el.type))))
-    .catch(err => log(`Err: ${err.message}`));
+    .then((messages) => {
+      messages.forEach(msg => console.log(msg));
+      process.exitCode = 0;
+      return messages;
+    })
+    .catch((err) => {
+      log(`Err: ${err.message}`);
+      console.error(`Something went wrong: ${err.message}`);
+      process.exit(1);
+    });
 };

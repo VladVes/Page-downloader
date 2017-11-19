@@ -1,31 +1,10 @@
-import os from 'os';
 import fs from 'mz/fs';
 import path from 'path';
-import nock from 'nock';
-import axios from 'axios';
-import httpAdapter from 'axios/lib/adapters/http';
-import {getLinks, fetchResources, updateLinks, updateHtml} from '../src/resources';
+import {getLinks, updateLinks, updateHtml} from '../src/resources';
 
-/*
-const address = 'https://hexlet.io';
-const pathToRes = '/courses';
-*/
 
-axios.defaults.adapter = httpAdapter;
+describe('Data handlers', () => {
 
-describe('Fetch resuourses and save to local dir', () => {
-/*
-  BeforeAll(() => {
-    const fixture = path.format({
-      dir: '__fixtures__',
-      base: 'source.html',
-    });
-    const html = fs.readFileSync(fixture, 'utf8');
-    nock(address)
-      .get(pathToRes)
-      .reply(200, html);
-  });
-*/
   const getFixture = (name) => {
     return path.format({
       dir: __dirname,
