@@ -22,7 +22,7 @@ program
               throw new Error(`Something went wrong: ${message}`);
             } else {
               message.forEach((msg) => {
-                const task2 = new Listr([{
+                const task2 = new Listr([{ // this emulation is for experiment only
                   title: `Fetching... ${msg}`,
                   task: () => {},
                 }]);
