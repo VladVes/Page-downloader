@@ -23,7 +23,6 @@ export default (url, outputDir) => {
     .catch((err) => {
       log(`Err: ${err.message}`);
       const userReadableErrMessage = updateErrMessage(err);
-      process.exitCode = 1;
       return userReadableErrMessage;
     });
 };
