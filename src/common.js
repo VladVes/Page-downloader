@@ -4,7 +4,7 @@ import fs from 'mz/fs';
 import axios from 'axios';
 import debug from 'debug';
 
-const log = debug('page-loader:');
+const log = debug('page-loader: i/o');
 
 const makeName = (uri, dir, type) => {
   const { host, path } = url.parse(uri);

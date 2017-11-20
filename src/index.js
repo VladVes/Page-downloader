@@ -4,7 +4,7 @@ import { makeName, getResponse, writeToFile, updateErrMessage } from './common';
 import { fetchResources } from './resources';
 
 export default (url, outputDir) => {
-  const log = debug('page-loader:');
+  const log = debug('page-loader: app');
   const resourcesDir = makeName(url, outputDir, '_files');
   const htmlFileName = makeName(url, outputDir, '.html');
   log('Starting %s', 'page-loader');

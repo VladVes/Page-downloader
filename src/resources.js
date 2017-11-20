@@ -4,7 +4,7 @@ import cheerio from 'cheerio';
 import debug from 'debug';
 import { getResponse } from './common';
 
-const log = debug('page-loader:');
+const log = debug('page-loader: res');
 
 const getLinks = (html, selector, predicate) => {
   const $ = cheerio.load(html);
