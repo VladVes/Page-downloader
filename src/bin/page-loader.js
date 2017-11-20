@@ -17,18 +17,15 @@ program
       {
         title: `Loading page: ${url}`,
         task: () => loadPage(url, outputDir)
-          .then((message) => {
-            if (process.exitCode > 0) {
-              throw new Error(`Something went wrong: ${message}`);
-            } else {
-              message.forEach((msg) => {
-                const task2 = new Listr([{ // this emulation is for experiment only
-                  title: `Fetching... ${msg}`,
-                  task: () => {},
-                }]);
-                task2.run();
-              });
-            }
+          .then(message => message.forEach((msg) => {
+            const task2 = new Listr([{ // this emulation is for experiment only
+              title: `Fetching... ${msg}`,
+              task: () => {},
+            }]);
+            task2.run();
+          }))
+          .catch((errMsg) => {
+            throw new Error(`Something went wrong: ${errMsg}`);
           }),
       },
     ]);
