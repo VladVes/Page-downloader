@@ -6,6 +6,7 @@
 ```
 This cli app downloads and save the html pages by given URL and
 modify all the references to the local resources.
+It's build around commanderJs library.
 ```
 
 ## Install:
