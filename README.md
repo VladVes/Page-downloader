@@ -4,7 +4,7 @@
 [![Build Status](https://www.travis-ci.org/VladVes/project-lvl3-s130.svg?branch=master)](https://www.travis-ci.org/VladVes/project-lvl3-s130)
 
 ```
-This cli app downloads and save html page by given URL and
+This cli app downloads and save the html pages by given URL and
 modify all the references to the local resources.
 ```
 
